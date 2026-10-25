@@ -1,0 +1,9 @@
+{
+  "resourceName": "demo-storage",
+  "resourceType": "storage",
+  "publicAccess": true,
+  "httpsOnly": false,
+  "minimumTlsVersion": "TLS1_0",
+  "environment": "production",
+  "tags": {}
+}
