@@ -1,0 +1,20 @@
+# Categories for GitHub's auto-generated release notes.
+# Used when you click "Generate release notes" on a new release.
+changelog:
+  exclude:
+    labels: [ skip-changelog ]
+  categories:
+    - title: New rules
+      labels: [ rule ]
+    - title: Features
+      labels: [ enhancement ]
+    - title: Bug fixes
+      labels: [ bug ]
+    - title: Security
+      labels: [ security ]
+    - title: Documentation
+      labels: [ documentation ]
+    - title: Dependencies and CI
+      labels: [ dependencies, ci ]
+    - title: Other changes
+      labels: [ '*' ]

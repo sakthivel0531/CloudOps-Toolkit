@@ -1,0 +1,33 @@
+# Keeps NuGet packages and pinned GitHub Actions up to date.
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [ dependencies ]
+    commit-message:
+      prefix: deps
+    groups:
+      # One PR per week for test tooling instead of one per package.
+      test-dependencies:
+        patterns:
+          - Microsoft.NET.Test.Sdk
+          - xunit*
+        update-types: [ minor, patch ]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [ dependencies, ci ]
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions:
+        patterns: [ '*' ]

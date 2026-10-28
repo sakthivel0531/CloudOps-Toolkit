@@ -1,0 +1,6 @@
+# Default reviewer for all changes.
+* @sakthivel0531
+
+# Workflow and security-sensitive files.
+/.github/ @sakthivel0531
+/SECURITY.md @sakthivel0531
