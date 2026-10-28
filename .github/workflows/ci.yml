@@ -38,14 +38,16 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+      # NuGet Audit checks direct and transitive packages against the
+      # GitHub Advisory Database. High (NU1903) and critical (NU1904)
+      # advisories fail the build; low and moderate stay as warnings.
       - name: Check for vulnerable NuGet packages
-        shell: bash
-        run: |
-          dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.txt
-          if grep -qi "has the following vulnerable packages" vulnerable-packages.txt; then
-            echo "::error::Vulnerable NuGet packages found. See the list above."
-            exit 1
-          fi
+        run: >-
+          dotnet restore --force
+          -p:NuGetAudit=true
+          -p:NuGetAuditMode=all
+          -p:NuGetAuditLevel=low
+          -p:WarningsAsErrors=NU1903%3BNU1904
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
