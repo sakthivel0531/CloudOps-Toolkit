@@ -33,5 +33,5 @@ No changes to the CLI behavior or the existing tests.
   CLOUD003 (legacy TLS), CLOUD004 (production resource without owner tag).
 - xUnit tests, sample configuration, docs and CI build.
 
-[Unreleased]: https://github.com/sakthivel0531/cloudops-toolkit/commits/main
-[0.1.0]: https://github.com/sakthivel0531/cloudops-toolkit/commits/main
+[Unreleased]: https://github.com/sakthivel0531/CloudOps-Toolkit/commits/main
+[0.1.0]: https://github.com/sakthivel0531/CloudOps-Toolkit/commits/main

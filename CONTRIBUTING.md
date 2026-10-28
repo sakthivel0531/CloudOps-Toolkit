@@ -10,7 +10,7 @@ Thanks for contributing! Small, focused pull requests are easiest to review.
 
 ## Before you start
 
-- Check [open issues](https://github.com/sakthivel0531/cloudops-toolkit/issues) and the [roadmap](ROADMAP.md).
+- Check [open issues](https://github.com/sakthivel0531/CloudOps-Toolkit/issues) and the [roadmap](ROADMAP.md).
 - For anything bigger than a small fix, open an issue first using one of the templates (bug report, feature request or new rule proposal) so the approach can be agreed.
 
 ## Making a change

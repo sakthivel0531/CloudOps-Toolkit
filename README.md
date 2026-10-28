@@ -1,7 +1,7 @@
 # CloudOps Toolkit
 
-[![Build and test](https://github.com/sakthivel0531/cloudops-toolkit/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sakthivel0531/cloudops-toolkit/actions/workflows/ci.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/sakthivel0531/cloudops-toolkit/badge)](https://scorecard.dev/viewer/?uri=github.com/sakthivel0531/cloudops-toolkit)
+[![Build and test](https://github.com/sakthivel0531/CloudOps-Toolkit/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sakthivel0531/CloudOps-Toolkit/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/sakthivel0531/CloudOps-Toolkit/badge)](https://scorecard.dev/viewer/?uri=github.com/sakthivel0531/CloudOps-Toolkit)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Status: early preview](https://img.shields.io/badge/status-early%20preview-orange)
@@ -25,7 +25,7 @@ A small .NET 10 command-line tool that checks a cloud resource configuration (JS
 ## Quick start
 
 ```bash
-git clone https://github.com/sakthivel0531/cloudops-toolkit.git
+git clone https://github.com/sakthivel0531/CloudOps-Toolkit.git
 cd cloudops-toolkit
 dotnet run --project src/CloudOps.Toolkit -- check examples/sample-config.json
 ```

@@ -14,7 +14,7 @@ The project is in early preview. Security fixes are made on the `main` branch an
 Please **do not** open a public issue for a vulnerability.
 
 1. Use GitHub's private reporting: **Security** tab → **Report a vulnerability**
-   ([direct link](https://github.com/sakthivel0531/cloudops-toolkit/security/advisories/new)).
+   ([direct link](https://github.com/sakthivel0531/CloudOps-Toolkit/security/advisories/new)).
 2. If that isn't available, contact the repository owner privately through a verified contact method on their GitHub profile.
 
 Include the affected version or commit, steps to reproduce, and the impact you expect. This is a volunteer project, so responses are best effort; we aim to acknowledge reports within a week and will keep you updated until the issue is resolved. We're happy to credit reporters who want it.
