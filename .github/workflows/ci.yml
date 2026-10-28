@@ -5,16 +5,31 @@ on:
     branches: [ main, master ]
   pull_request:
   workflow_dispatch:
+  # Weekly run keeps OpenSSF Scorecard and CodeQL results current
+  # even when nothing is pushed.
+  schedule:
+    - cron: '27 4 * * 1'
+  # Lets Scorecard re-evaluate the Branch-Protection check when rules change.
+  branch_protection_rule:
 
-permissions:
-  contents: read
+# Least privilege: the default token gets no permissions.
+# Each job below asks only for what it needs.
+# Note: OpenSSF Scorecard publishing requires that this workflow has
+# no top-level env/defaults and no workflow-level write permissions.
+permissions: {}
 
 jobs:
   build-test:
+    name: Build and test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
       - name: Restore
@@ -23,10 +38,103 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+      # NuGet Audit checks direct and transitive packages against the
+      # GitHub Advisory Database. High (NU1903) and critical (NU1904)
+      # advisories fail the build; low and moderate stay as warnings.
+      - name: Check for vulnerable NuGet packages
+        run: >-
+          dotnet restore --force
+          -p:NuGetAudit=true
+          -p:NuGetAuditMode=all
+          -p:NuGetAuditLevel=low
+          -p:WarningsAsErrors=NU1903%3BNU1904
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test-results
           path: '**/TestResults/*.trx'
           if-no-files-found: ignore
+
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        # 'actions' scans the workflow files themselves for injection
+        # and permission problems.
+        language: [ csharp, actions ]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        if: matrix.language == 'csharp'
+        with:
+          dotnet-version: 10.0.x
+      - uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          queries: security-extended
+      - uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          category: /language:${{ matrix.language }}
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+
+  scorecard:
+    name: OpenSSF Scorecard
+    # Scorecard supports push/schedule on the default branch; pull_request
+    # and workflow_dispatch are experimental, so they are skipped here.
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.event_name != 'workflow_dispatch' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Scorecard publishing rules: no job-level env/defaults, no containers,
+    # and only approved actions in this job.
+    permissions:
+      contents: read
+      actions: read
+      # Upload results to the Security tab (code scanning).
+      security-events: write
+      # Publish results to the public Scorecard API and enable the badge.
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
+        with:
+          results_file: scorecard-results.sarif
+          results_format: sarif
+          publish_results: true
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: scorecard-results
+          path: scorecard-results.sarif
+          retention-days: 5
+      - uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          sarif_file: scorecard-results.sarif

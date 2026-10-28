@@ -1,0 +1,61 @@
+name: Bug report
+description: Something in the CLI or a rule behaves incorrectly.
+labels: [ bug, triage ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. **Do not paste secrets, credentials or unredacted production configuration.**
+        For security vulnerabilities, use the private report link instead of this form.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Minimal sanitized input
+      description: The smallest JSON that reproduces the problem.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: dotnet run --project src/CloudOps.Toolkit -- check input.json --format json
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual output and exit code
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Toolkit version or commit
+      placeholder: v0.1.0 or commit SHA
+  - type: input
+    id: environment
+    attributes:
+      label: OS and .NET SDK version
+      placeholder: Ubuntu 24.04, dotnet 10.0.100
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed secrets and personal data from everything above.
+          required: true

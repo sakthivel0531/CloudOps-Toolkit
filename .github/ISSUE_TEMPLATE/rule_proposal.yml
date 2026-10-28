@@ -1,0 +1,50 @@
+name: New rule proposal
+description: Propose a new baseline rule (CLOUDxxx).
+labels: [ rule, triage ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Rules should be deterministic, explainable and backed by a public reference.
+        See docs/security-checks.md for existing rules.
+  - type: input
+    id: title
+    attributes:
+      label: Rule title
+      placeholder: Storage account allows shared key access
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Proposed severity
+      options: [ ERROR, WARNING ]
+    validations:
+      required: true
+  - type: textarea
+    id: condition
+    attributes:
+      label: Condition
+      description: Which JSON property and value should trigger the finding?
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example inputs
+      description: One input that should trigger the rule and one that should not.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation text
+      description: What should the finding tell the user to do?
+    validations:
+      required: true
+  - type: input
+    id: reference
+    attributes:
+      label: Reference
+      description: Link to vendor documentation or a public benchmark.
